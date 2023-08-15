@@ -16,5 +16,12 @@ export default function Ship(length) {
         return this.hits;
     }
 
-    return { length, hits, sunk, hit, getHits, getLength };
+    function isSunk() {
+        if (this.length === this.getHits()) {
+            return true;
+        }
+        return false;
+    }
+
+    return { length, hits, sunk, hit, getHits, getLength, isSunk };
 }
