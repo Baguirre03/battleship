@@ -30,7 +30,16 @@ test("ship spot is taken", () => {
     const shipOne = new Ship(1, "name");
     const shipShouldntPlace = new Ship(1, "another-name");
     gameboard.placeShip(shipOne, 1, 1, "vertical");
-    expect(gameboard.placeShip(shipShouldntPlace, 1, 1, "vertical")).toEqual(
+    expect(gameboard.placeShip(shipShouldntPlace, 1, 1, "vertical")).toBe(
+        false,
+    );
+});
+
+test("more complicated ship overlap", () => {
+    const shipOne = new Ship(3, "name");
+    const shipShouldntPlace = new Ship(5, "another-name");
+    gameboard.placeShip(shipOne, 3, 4, "vertical");
+    expect(gameboard.placeShip(shipShouldntPlace, 3, 4, "horizontal")).toBe(
         false,
     );
 });

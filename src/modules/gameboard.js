@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 export default function Gameboard() {
     const board = iniatlizeBoard();
 
@@ -45,36 +46,40 @@ export default function Gameboard() {
         return newCords;
     }
 
-    // function checkIfCordsHasShip(cordOne, cordTwo, direction, additonalCords) {
-    //     if (direction === "horizontal") {
-    //         additonalCords.forEach((horizontalCord) => {
-    //             if (this.board[cordOne][horizontalCord] != null) {
-    //                 return true;
-    //             }
-    //             return false;
-    //         });
-    //     }
-    //     if (direction === "vertical") {
-    //         additonalCords.forEach((verticalCord) => {
-    //             if (this.board[verticalCord][cordTwo] != null) {
-    //                 return true;
-    //             }
-    //             return false;
-    //         });
-    //     }
-    //     return false;
-    // }
+    function checkIfCordsHasShip(
+        cordOne,
+        cordTwo,
+        direction,
+        additonalCords,
+        boardCopy,
+    ) {
+        if (direction === "horizontal") {
+            for (const cordinate of additonalCords) {
+                if (boardCopy[cordOne][cordinate] != null) {
+                    return true;
+                }
+            }
+        }
+        if (direction === "vertical") {
+            for (const cordinate of additonalCords) {
+                if (boardCopy[cordinate][cordTwo] != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     function placeShip(shipObj, cordOne, cordTwo, direction) {
         if (placeShipIsOutOfBounds(shipObj, cordOne, cordTwo, direction)) {
             return false;
         }
         const cords = findCords(shipObj, cordOne, cordTwo, direction);
-
-        // if (checkIfCordsHasShip(cordOne, cordTwo, direction, cords)) {
-        //     return false;
-        // }
-
+        if (
+            checkIfCordsHasShip(cordOne, cordTwo, direction, cords, this.board)
+        ) {
+            return false;
+        }
         cords.forEach((cord) => {
             if (direction === "horizontal") {
                 this.board[cordOne][cord] = shipObj;
@@ -85,13 +90,8 @@ export default function Gameboard() {
         });
     }
 
-    function getCords(cordOne, cordTwo) {
-        return this.board[cordOne][cordTwo];
-    }
-
     return {
         board,
         placeShip,
-        getCords,
     };
 }
