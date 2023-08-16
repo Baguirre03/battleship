@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-export default function Ship(length) {
+export default function Ship(length, name) {
     let hits = 0;
     let sunk = false;
 
@@ -23,5 +23,5 @@ export default function Ship(length) {
         return false;
     }
 
-    return { length, hits, sunk, hit, getHits, getLength, isSunk };
+    return { length, name, hits, sunk, hit, getHits, getLength, isSunk };
 }
