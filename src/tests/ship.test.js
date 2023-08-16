@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
-import Ship from "./ship";
+import Ship from "../modules/ship";
 
-const threeShip = new Ship(3);
-const twoShip = new Ship(2);
+const threeShip = new Ship(3, "three-ship");
+const twoShip = new Ship(2, "two-ship");
 
 test("get length of ship", () => {
     expect(threeShip.getLength()).toBe(3);
