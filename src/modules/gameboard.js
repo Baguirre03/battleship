@@ -1,6 +1,8 @@
+/* eslint-disable prefer-const */
 /* eslint-disable no-restricted-syntax */
 export default function Gameboard() {
     const board = iniatlizeBoard();
+    let misses = 0;
 
     function iniatlizeBoard() {
         const holder = [];
@@ -13,7 +15,11 @@ export default function Gameboard() {
         return holder;
     }
 
-    function placeShipIsOutOfBounds(shipObj, cordOne, cordTwo, direction) {
+    function getMisses() {
+        return this.misses;
+    }
+
+    function checkIfShipIsOutOfBounds(shipObj, cordOne, cordTwo, direction) {
         if (
             direction === "horizontal" &&
             cordOne - 1 + shipObj.getLength() > 10
@@ -71,15 +77,18 @@ export default function Gameboard() {
     }
 
     function placeShip(shipObj, cordOne, cordTwo, direction) {
-        if (placeShipIsOutOfBounds(shipObj, cordOne, cordTwo, direction)) {
+        if (checkIfShipIsOutOfBounds(shipObj, cordOne, cordTwo, direction)) {
             return false;
         }
+
         const cords = findCords(shipObj, cordOne, cordTwo, direction);
+
         if (
             checkIfCordsHasShip(cordOne, cordTwo, direction, cords, this.board)
         ) {
             return false;
         }
+
         cords.forEach((cord) => {
             if (direction === "horizontal") {
                 this.board[cordOne][cord] = shipObj;
@@ -90,8 +99,39 @@ export default function Gameboard() {
         });
     }
 
+    function checkCord(cordOne, cordTwo, boardCopy) {
+        const cordinate = boardCopy[cordOne][cordTwo];
+        if (cordinate != null) {
+            return board[cordOne][cordTwo]; // returns ship if there
+        }
+        return null;
+    }
+
+    function updateHits(ship) {
+        return ship.hit();
+    }
+
+    function recieveAttack(cordOne, cordTwo) {
+        const ship = checkCord(cordOne, cordTwo, this.board);
+        if (!ship) {
+            this.misses += 1;
+            return "miss";
+        }
+        updateHits(ship);
+        return "hit";
+    }
+
+    // Gameboards should have a receiveAttack
+    // function that takes a pair of coordinates,
+    // determines whether or not the attack hit a ship
+    // and then sends the ‘hit’ function to the correct
+    // ship, or records the coordinates of the missed shot.
+
     return {
         board,
+        misses,
         placeShip,
+        recieveAttack,
+        getMisses,
     };
 }

@@ -3,9 +3,9 @@ import Gameboard from "../modules/gameboard";
 import Ship from "../modules/ship";
 
 const gameboard = new Gameboard();
+const twoShip = new Ship(2, "two-ship");
 
 test("place twoShip on gameboard", () => {
-    const twoShip = new Ship(2, "two-ship");
     gameboard.placeShip(twoShip, 1, 1, "vertical");
     expect(gameboard.board[1][1] && gameboard.board[2][1]).toEqual(twoShip);
 });
@@ -42,4 +42,27 @@ test("more complicated ship overlap", () => {
     expect(gameboard.placeShip(shipShouldntPlace, 3, 4, "horizontal")).toBe(
         false,
     );
+});
+
+test.skip("checks cordinate for ship", () => {
+    const ship = Ship(2, "ship");
+    gameboard.placeShip(ship, 1, 1, "vertical");
+    expect(gameboard.recieveAttack(1, 1)).toEqual(ship);
+}); //  worked -- returned the ship object.
+
+test("recieve returns a miss if no ship is there", () => {
+    expect(gameboard.recieveAttack(1, 8)).toEqual("miss");
+});
+test("counts a miss from above test", () => {
+    expect(gameboard.getMisses()).toEqual(1);
+});
+
+test("counts another miss", () => {
+    gameboard.recieveAttack(1, 7);
+    expect(gameboard.getMisses()).toEqual(2);
+});
+
+test("hit the ship correctly", () => {
+    gameboard.recieveAttack(1, 1);
+    expect(twoShip.getHits()).toEqual(1);
 });
