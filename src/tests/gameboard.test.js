@@ -7,13 +7,15 @@ const twoShip = new Ship(2, "two-ship");
 
 test("place twoShip on gameboard", () => {
     gameboard.placeShip(twoShip, 1, 1, "vertical");
-    expect(gameboard.board[1][1] && gameboard.board[2][1]).toEqual(twoShip);
+    expect(gameboard.board[1][1] && gameboard.board[1][2]).toEqual(twoShip);
 });
 
 test("place threeShip on gameboard", () => {
-    const threeShip = new Ship(3, "two-ship");
+    const threeShip = new Ship(3, "three-ship");
     gameboard.placeShip(threeShip, 2, 3, "horizontal");
-    expect(gameboard.board[2][3]).toEqual(threeShip);
+    expect(
+        gameboard.board[2][3] && gameboard.board[3][3] && gameboard.board[4][3],
+    ).toEqual(threeShip);
 });
 
 test("ship cannot be placed on edge of board vertical", () => {
@@ -55,14 +57,58 @@ test("recieve returns a miss if no ship is there", () => {
 });
 test("counts a miss from above test", () => {
     expect(gameboard.getMisses()).toEqual(1);
+    expect(gameboard.missedCords).toEqual([[1, 8]]);
 });
 
 test("counts another miss", () => {
     gameboard.recieveAttack(1, 7);
     expect(gameboard.getMisses()).toEqual(2);
+    expect(gameboard.missedCords).toEqual([
+        [1, 8],
+        [1, 7],
+    ]);
 });
 
 test("hit the ship correctly", () => {
     gameboard.recieveAttack(1, 1);
     expect(twoShip.getHits()).toEqual(1);
+});
+
+test("all ships sunk basic test", () => {
+    const newGame = Gameboard();
+    const shipOne = Ship(1, "ship-one");
+    const shipTwo = Ship(1, "ship-two");
+    newGame.placeShip(shipOne, 1, 1, "vertical");
+    newGame.placeShip(shipTwo, 2, 1, "vertical");
+    newGame.recieveAttack(1, 1);
+    newGame.recieveAttack(2, 1);
+    expect(newGame.allShipsSunk()).toEqual(true);
+});
+
+test("not all ships are sunk", () => {
+    const newGame = Gameboard();
+    const shipOne = Ship(1, "ship-one");
+    const shipTwo = Ship(1, "ship-two");
+    newGame.placeShip(shipOne, 1, 1, "vertical");
+    newGame.placeShip(shipTwo, 2, 1, "vertical");
+    newGame.recieveAttack(1, 1);
+    expect(newGame.allShipsSunk()).toEqual(false);
+});
+
+test("add another ship to be sunk", () => {
+    const newGame = Gameboard();
+    const shipOne = Ship(1, "ship-one");
+    const shipTwo = Ship(1, "ship-two");
+    const shipThree = Ship(2, "third longer ship");
+
+    newGame.placeShip(shipOne, 1, 1, "vertical");
+    newGame.placeShip(shipTwo, 2, 1, "vertical");
+    newGame.placeShip(shipThree, 8, 1, "vertical");
+
+    newGame.recieveAttack(1, 1);
+    newGame.recieveAttack(2, 1);
+    newGame.recieveAttack(8, 1);
+    newGame.recieveAttack(8, 2);
+
+    expect(newGame.allShipsSunk()).toEqual(true);
 });

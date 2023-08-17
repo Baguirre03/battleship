@@ -3,6 +3,9 @@
 export default function Gameboard() {
     const board = iniatlizeBoard();
     let misses = 0;
+    let missedCords = [];
+    let shipsArray = [];
+    let sunkShips = 0;
 
     function iniatlizeBoard() {
         const holder = [];
@@ -17,6 +20,10 @@ export default function Gameboard() {
 
     function getMisses() {
         return this.misses;
+    }
+
+    function getSunkShips() {
+        return this.sunkShips;
     }
 
     function checkIfShipIsOutOfBounds(shipObj, cordOne, cordTwo, direction) {
@@ -38,15 +45,15 @@ export default function Gameboard() {
     function findCords(shipObj, cordOne, cordTwo, direction) {
         const newCords = [];
         if (direction === "horizontal") {
-            newCords.push(cordTwo);
-            for (let i = 1; i < shipObj.getLength(); i += 1) {
-                newCords.push(cordTwo + i);
-            }
-        }
-        if (direction === "vertical") {
             newCords.push(cordOne);
             for (let i = 1; i < shipObj.getLength(); i += 1) {
                 newCords.push(cordOne + i);
+            }
+        }
+        if (direction === "vertical") {
+            newCords.push(cordTwo);
+            for (let i = 1; i < shipObj.getLength(); i += 1) {
+                newCords.push(cordTwo + i);
             }
         }
         return newCords;
@@ -61,14 +68,14 @@ export default function Gameboard() {
     ) {
         if (direction === "horizontal") {
             for (const cordinate of additonalCords) {
-                if (boardCopy[cordOne][cordinate] != null) {
+                if (boardCopy[cordinate][cordTwo] != null) {
                     return true;
                 }
             }
         }
         if (direction === "vertical") {
             for (const cordinate of additonalCords) {
-                if (boardCopy[cordinate][cordTwo] != null) {
+                if (boardCopy[cordOne][cordinate] != null) {
                     return true;
                 }
             }
@@ -91,12 +98,13 @@ export default function Gameboard() {
 
         cords.forEach((cord) => {
             if (direction === "horizontal") {
-                this.board[cordOne][cord] = shipObj;
-            }
-            if (direction === "vertical") {
                 this.board[cord][cordTwo] = shipObj;
             }
+            if (direction === "vertical") {
+                this.board[cordOne][cord] = shipObj;
+            }
         });
+        this.shipsArray.push(shipObj);
     }
 
     function checkCord(cordOne, cordTwo, boardCopy) {
@@ -107,18 +115,31 @@ export default function Gameboard() {
         return null;
     }
 
-    function updateHits(ship) {
-        return ship.hit();
+    function updateHits(ship, board) {
+        ship.hit();
+        if (ship.isSunk()) {
+            board.sunkShips += 1;
+        }
     }
 
     function recieveAttack(cordOne, cordTwo) {
         const ship = checkCord(cordOne, cordTwo, this.board);
         if (!ship) {
             this.misses += 1;
+            this.missedCords.push([cordOne, cordTwo]);
             return "miss";
         }
-        updateHits(ship);
+        updateHits(ship, this.board);
         return "hit";
+    }
+
+    const isSunkShip = (ship) => ship.sunk;
+
+    function allShipsSunk() {
+        if (shipsArray.every(isSunkShip)) {
+            return true;
+        }
+        return false;
     }
 
     // Gameboards should have a receiveAttack
@@ -133,5 +154,10 @@ export default function Gameboard() {
         placeShip,
         recieveAttack,
         getMisses,
+        missedCords,
+        shipsArray,
+        sunkShips,
+        allShipsSunk,
+        getSunkShips,
     };
 }

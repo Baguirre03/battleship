@@ -21,8 +21,10 @@ test("add another hit to ship", () => {
 test("three hits, ship is sunk", () => {
     threeShip.hit();
     expect(threeShip.isSunk()).toBe(true);
+    expect(threeShip.sunk).toBe(true);
 });
 
 test("two ship is not sunk when started", () => {
     expect(twoShip.isSunk()).toBe(false);
+    expect(twoShip.sunk).toBe(false);
 });

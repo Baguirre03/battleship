@@ -18,6 +18,7 @@ export default function Ship(length, name) {
 
     function isSunk() {
         if (this.length === this.getHits()) {
+            this.sunk = true;
             return true;
         }
         return false;
