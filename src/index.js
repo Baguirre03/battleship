@@ -1,5 +1,6 @@
 import Gameboard from "./modules/gameboard";
 import Ship from "./modules/ship";
+import Player from "./modules/player";
 
 const newGame = Gameboard();
 const shipOne = Ship(1, "ship-one");
@@ -15,4 +16,3 @@ newGame.recieveAttack(2, 1);
 newGame.recieveAttack(8, 1);
 newGame.recieveAttack(8, 2);
 console.log(newGame);
-console.log(newGame.allShipsSunk());

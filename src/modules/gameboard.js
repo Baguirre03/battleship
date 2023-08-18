@@ -1,5 +1,9 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
+/* eslint-disable consistent-return */
 /* eslint-disable prefer-const */
 /* eslint-disable no-restricted-syntax */
+
 export default function Gameboard() {
     const board = iniatlizeBoard();
     let misses = 0;
@@ -107,7 +111,7 @@ export default function Gameboard() {
         this.shipsArray.push(shipObj);
     }
 
-    function checkCord(cordOne, cordTwo, boardCopy) {
+    function checkCordForAttack(cordOne, cordTwo, boardCopy) {
         const cordinate = boardCopy[cordOne][cordTwo];
         if (cordinate != null) {
             return board[cordOne][cordTwo]; // returns ship if there
@@ -115,22 +119,22 @@ export default function Gameboard() {
         return null;
     }
 
-    function updateHits(ship, board) {
+    function updateHits(ship, boardCopy) {
         ship.hit();
         if (ship.isSunk()) {
-            board.sunkShips += 1;
+            boardCopy.sunkShips += 1;
         }
     }
 
     function recieveAttack(cordOne, cordTwo) {
-        const ship = checkCord(cordOne, cordTwo, this.board);
+        const ship = checkCordForAttack(cordOne, cordTwo, this.board);
         if (!ship) {
             this.misses += 1;
             this.missedCords.push([cordOne, cordTwo]);
             return "miss";
         }
         updateHits(ship, this.board);
-        return "hit";
+        return ship;
     }
 
     const isSunkShip = (ship) => ship.sunk;
@@ -141,12 +145,6 @@ export default function Gameboard() {
         }
         return false;
     }
-
-    // Gameboards should have a receiveAttack
-    // function that takes a pair of coordinates,
-    // determines whether or not the attack hit a ship
-    // and then sends the ‘hit’ function to the correct
-    // ship, or records the coordinates of the missed shot.
 
     return {
         board,
