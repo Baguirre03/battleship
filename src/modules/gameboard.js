@@ -8,6 +8,7 @@ export default function Gameboard() {
     const board = iniatlizeBoard();
     let misses = 0;
     let missedCords = [];
+    let allCords = [];
     let shipsArray = [];
     let sunkShips = 0;
 
@@ -112,6 +113,7 @@ export default function Gameboard() {
     }
 
     function checkCordForAttack(cordOne, cordTwo, boardCopy) {
+        console.log(cordOne, cordTwo);
         const cordinate = boardCopy[cordOne][cordTwo];
         if (cordinate != null) {
             return board[cordOne][cordTwo]; // returns ship if there
@@ -127,6 +129,7 @@ export default function Gameboard() {
     }
 
     function recieveAttack(cordOne, cordTwo) {
+        this.allCords.push([cordOne, cordTwo]);
         const ship = checkCordForAttack(cordOne, cordTwo, this.board);
         if (!ship) {
             this.misses += 1;
@@ -157,5 +160,6 @@ export default function Gameboard() {
         sunkShips,
         allShipsSunk,
         getSunkShips,
+        allCords,
     };
 }
