@@ -1,8 +1,11 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-use-before-define */
 /* eslint-disable consistent-return */
 /* eslint-disable prefer-const */
 /* eslint-disable no-restricted-syntax */
+
+import Ship from "./ship";
 
 export default function Gameboard() {
     const board = iniatlizeBoard();
@@ -88,32 +91,29 @@ export default function Gameboard() {
         return false;
     }
 
-    function placeShip(shipObj, cordOne, cordTwo, direction) {
+    function placeShip(shipObj, cordOne, cordTwo, direction, board) {
         if (checkIfShipIsOutOfBounds(shipObj, cordOne, cordTwo, direction)) {
             return false;
         }
 
         const cords = findCords(shipObj, cordOne, cordTwo, direction);
 
-        if (
-            checkIfCordsHasShip(cordOne, cordTwo, direction, cords, this.board)
-        ) {
+        if (checkIfCordsHasShip(cordOne, cordTwo, direction, cords, board)) {
             return false;
         }
 
         cords.forEach((cord) => {
             if (direction === "horizontal") {
-                this.board[cord][cordTwo] = shipObj;
+                board[cord][cordTwo] = shipObj;
             }
             if (direction === "vertical") {
-                this.board[cordOne][cord] = shipObj;
+                board[cordOne][cord] = shipObj;
             }
         });
-        this.shipsArray.push(shipObj);
+        shipsArray.push(shipObj);
     }
 
     function checkCordForAttack(cordOne, cordTwo, boardCopy) {
-        console.log(cordOne, cordTwo);
         const cordinate = boardCopy[cordOne][cordTwo];
         if (cordinate != null) {
             return board[cordOne][cordTwo]; // returns ship if there
@@ -149,6 +149,47 @@ export default function Gameboard() {
         return false;
     }
 
+    function randomNumber() {
+        let num = Math.floor(Math.random() * 10);
+        if (num === 0) {
+            return randomNumber();
+        }
+        return num;
+    }
+
+    function randomDirection() {
+        let directions = ["vertical", "horizontal"];
+        return directions[Math.floor(Math.random() * directions.length)];
+    }
+
+    function placeRobotShips() {
+        const ships = [
+            Ship(1, "one"),
+            Ship(2, "two"),
+            Ship(3, "three"),
+            Ship(4, "four"),
+            Ship(5, "five"),
+        ];
+
+        ships.forEach((ship) => {
+            placeShipsRobotRec(ship, this.board);
+        });
+    }
+
+    function placeShipsRobotRec(ship, board) {
+        if (
+            placeShip(
+                ship,
+                randomNumber(),
+                randomNumber(),
+                randomDirection(),
+                board,
+            ) === false
+        ) {
+            placeShipsRobotRec(ship, board);
+        }
+    }
+
     return {
         board,
         misses,
@@ -160,6 +201,9 @@ export default function Gameboard() {
         sunkShips,
         allShipsSunk,
         getSunkShips,
+        placeRobotShips,
         allCords,
+        randomDirection,
+        randomNumber,
     };
 }

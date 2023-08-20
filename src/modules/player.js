@@ -14,7 +14,11 @@ export default function Player(playerName) {
     }
 
     function switchTurn() {
-        this.turn = true;
+        if(this.turn === false) {
+            this.turn = true
+        } else {
+            this.turn = false
+        }
         return this.turn;
     }
 
