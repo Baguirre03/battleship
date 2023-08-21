@@ -22,7 +22,7 @@ export default function Player(playerName) {
     }
 
     function randomNumber() {
-        let num = Math.floor(Math.random() * 10);
+        let num = Math.floor(Math.random() * 11);
         if (num === 0) {
             return randomNumber();
         }
@@ -49,8 +49,15 @@ export default function Player(playerName) {
 
     function aiMoves(opponent) {
         let cords = availableMoves(opponent);
-        opponent.game.recieveAttack(cords[0], cords[1]);
-        return cords;
+        const cell = document.querySelector(
+            `[data-cord-one="${cords[0]}"][data-cord-two="${cords[1]}"]`,
+        );
+        if (opponent.game.recieveAttack(cords[0], cords[1]) === true) {
+            cell.classList.add("hit-ship");
+            return true;
+        }
+        cell.classList.add("miss");
+        return false;
     }
 
     return {

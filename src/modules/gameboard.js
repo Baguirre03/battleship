@@ -191,6 +191,15 @@ export default function Gameboard() {
         }
     }
 
+    function checkIfAlreadyClicked(cordOne, cordTwo) {
+        for (let i = 0; i < allCords.length; i += 1) {
+            if (cordOne === allCords[i][0] && cordTwo === allCords[i][1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     return {
         board,
         misses,
@@ -206,5 +215,6 @@ export default function Gameboard() {
         allCords,
         randomDirection,
         randomNumber,
+        checkIfAlreadyClicked,
     };
 }

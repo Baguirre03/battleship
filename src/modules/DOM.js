@@ -42,19 +42,13 @@ function displayGameBoards(boardObj, boardSelector, secondClass) {
             divOne.appendChild(divTwo);
             divTwo.dataset.cordOne = j;
             divTwo.dataset.cordTwo = i;
-            // if (boardObj[j][i] != null) {
-            //     divTwo.classList.add("hit-ship");
-            // } else {
-            //     divTwo.classList.add("empty");
-            // }
         }
     }
 }
 
-const user = Player("user");
-const robot = Player("robot");
-
 function gameLoop() {
+    const user = Player("user");
+    const robot = Player("robot");
     user.switchTurn();
 
     robot.game.placeRobotShips();
@@ -63,7 +57,6 @@ function gameLoop() {
     user.game.placeShip(playerShips[2], 2, 4, "vertical", user.game.board);
     user.game.placeShip(playerShips[3], 9, 3, "vertical", user.game.board);
     user.game.placeShip(playerShips[4], 10, 3, "vertical", user.game.board);
-    robot.game.placeShip(playerShips[0], 1, 1, "vertical", robot.game.board);
 
     displayGameBoards(user.game.board, "#user-board");
     displayGameBoards(robot.game.board, "#bot-board", "bot");
@@ -71,20 +64,29 @@ function gameLoop() {
     const botBoard = document.querySelectorAll(".bot");
     botBoard.forEach((cell) => {
         cell.addEventListener("click", () => {
-            gameSequence(cell);
+            if (
+                robot.game.checkIfAlreadyClicked(
+                    cell.dataset.cordOne,
+                    cell.dataset.cordTwo,
+                )
+            ) {
+                return;
+            }
+            gameSequence(cell, robot, user);
+            if (robot.game.allShipsSunk() || user.game.allShipsSunk()) {
+                console.log("game one");
+            }
         });
     });
 }
 
-function gameSequence(cell) {
+function gameSequence(cell, robot, user) {
     if (user.takeTurn(robot, cell.dataset.cordOne, cell.dataset.cordTwo)) {
         cell.classList.add("hit-ship");
     } else {
         cell.classList.add("miss");
     }
-    // user.switchTurn();
-    // robot.switchTurn();
-    // robot.aiMoves(user);
+    robot.aiMoves(user);
 }
 
 export { generateStarterHTML, gameLoop };
