@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-param-reassign */
 import Player from "./player";
 import Ship from "./ship";
@@ -40,6 +41,7 @@ function displayGameBoards(boardObj, boardSelector, secondClass) {
             const divTwo = document.createElement("div");
             divTwo.classList.add("row");
             divTwo.classList.add(secondClass);
+            
             divOne.appendChild(divTwo);
             divTwo.dataset.cordOne = j;
             divTwo.dataset.cordTwo = i;
@@ -70,32 +72,25 @@ function checkWinner(robot, user) {
     return false;
 }
 
-function gameSequence(cell, robot, user, gameOver) {
-    if (gameOver) {
-        return;
-    }
-    if (
-        robot.game.checkIfAlreadyClicked(
-            cell.dataset.cordOne,
-            cell.dataset.cordTwo,
-        )
-    ) {
-        return;
-    }
 
+function gameSequence(cell, robot, user, gameOver) {
+    if (gameOver || robot.game.checkIfAlreadyClicked(cell.dataset.cordOne, cell.dataset.cordTwo)) {
+        return;
+    } 
     if (user.takeTurn(robot, cell.dataset.cordOne, cell.dataset.cordTwo)) {
         cell.classList.add("hit-ship");
     } else {
+        robot.aiMoves(user);
         cell.classList.add("miss");
     }
-    robot.aiMoves(user);
 }
 
 function gameLoop() {
     const user = Player("user");
     const robot = Player("robot");
     let gameOver = false;
-    user.switchTurn();
+    let placedShips = false
+    user.switchTurn()
 
     robot.game.placeRobotShips();
     user.game.placeShip(playerShips[0], 1, 1, "vertical", user.game.board);

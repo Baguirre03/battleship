@@ -14,11 +14,8 @@ export default function Player(playerName) {
     }
 
     function switchTurn() {
-        if (this.turn === false) {
-            this.turn = true;
-        } else {
-            this.turn = false;
-        }
+        this.turn ? this.turn = false : this.turn = true  
+
         return this.turn;
     }
 
@@ -55,6 +52,7 @@ export default function Player(playerName) {
         );
         if (opponent.game.recieveAttack(cords[0], cords[1]) === true) {
             cell.classList.add("hit-ship");
+            aiMoves(opponent)
             return true;
         }
         cell.classList.add("miss");
