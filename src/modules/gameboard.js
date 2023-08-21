@@ -165,10 +165,10 @@ export default function Gameboard() {
 
     function placeRobotShips() {
         const ships = [
-            Ship(1, "one"),
-            Ship(2, "two"),
-            Ship(3, "three"),
-            Ship(4, "four"),
+            // Ship(1, "one"),
+            // Ship(2, "two"),
+            // Ship(3, "three"),
+            // Ship(4, "four"),
             Ship(5, "five"),
         ];
 

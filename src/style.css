@@ -28,3 +28,7 @@
 .miss {
     background-color: blue;
 }
+
+.winner-display {
+    font-size: 3rem;
+}

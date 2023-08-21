@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import Player from "./player";
 import Ship from "./ship";
 
@@ -46,9 +47,54 @@ function displayGameBoards(boardObj, boardSelector, secondClass) {
     }
 }
 
+function displayWinner(winner) {
+    if (!document.querySelector(".winner-display")) {
+        const display = document.createElement("div");
+        display.classList.add("winner-display");
+        document.body.appendChild(display);
+        display.textContent = `${winner.playerName} has one the game!`;
+    }
+}
+
+function checkWinner(robot, user) {
+    if (robot.game.allShipsSunk()) {
+        user.winner = true;
+        displayWinner(user);
+        return true;
+    }
+    if (user.game.allShipsSunk()) {
+        robot.winner = true;
+        displayWinner(robot);
+        return true;
+    }
+    return false;
+}
+
+function gameSequence(cell, robot, user, gameOver) {
+    if (gameOver) {
+        return;
+    }
+    if (
+        robot.game.checkIfAlreadyClicked(
+            cell.dataset.cordOne,
+            cell.dataset.cordTwo,
+        )
+    ) {
+        return;
+    }
+
+    if (user.takeTurn(robot, cell.dataset.cordOne, cell.dataset.cordTwo)) {
+        cell.classList.add("hit-ship");
+    } else {
+        cell.classList.add("miss");
+    }
+    robot.aiMoves(user);
+}
+
 function gameLoop() {
     const user = Player("user");
     const robot = Player("robot");
+    let gameOver = false;
     user.switchTurn();
 
     robot.game.placeRobotShips();
@@ -64,29 +110,12 @@ function gameLoop() {
     const botBoard = document.querySelectorAll(".bot");
     botBoard.forEach((cell) => {
         cell.addEventListener("click", () => {
-            if (
-                robot.game.checkIfAlreadyClicked(
-                    cell.dataset.cordOne,
-                    cell.dataset.cordTwo,
-                )
-            ) {
-                return;
-            }
-            gameSequence(cell, robot, user);
-            if (robot.game.allShipsSunk() || user.game.allShipsSunk()) {
-                console.log("game one");
+            gameSequence(cell, robot, user, gameOver);
+            if (checkWinner(robot, user)) {
+                gameOver = true;
             }
         });
     });
-}
-
-function gameSequence(cell, robot, user) {
-    if (user.takeTurn(robot, cell.dataset.cordOne, cell.dataset.cordTwo)) {
-        cell.classList.add("hit-ship");
-    } else {
-        cell.classList.add("miss");
-    }
-    robot.aiMoves(user);
 }
 
 export { generateStarterHTML, gameLoop };

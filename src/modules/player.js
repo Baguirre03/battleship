@@ -4,6 +4,7 @@ import Gameboard from "./gameboard";
 export default function Player(playerName) {
     let turn = false;
     let game = Gameboard();
+    let winner = false;
 
     function takeTurn(opponent, cordOne, cordTwo) {
         if (this.turn === false) {
@@ -67,5 +68,6 @@ export default function Player(playerName) {
         takeTurn,
         switchTurn,
         aiMoves,
+        winner,
     };
 }
