@@ -7,13 +7,15 @@ function generateStarterHTML() {
         <div class="title">BattleShip</div>
     </head>
     <body>
-        <div class="section-holder">
-            <div class="player-name"></div>
-            <div class="board" id="user-board"></div>
-        </div>
-        <div class="section-holder">
-            <div class="player-name"></div>
-            <div class="board" id="bot-board"></div>
+        <div class="main-container">
+            <div class="section-holder">
+                <div class="player-name"></div>
+                <div class="board" id="user-board"></div>
+            </div>
+            <div class="section-holder">
+                <div class="player-name"></div>
+                <div class="board" id="bot-board"></div>
+            </div>
         </div>
     </body>
     `;
@@ -27,24 +29,8 @@ const playerShips = [
     Ship(5, "five"),
 ];
 
-function gameLoop() {
-    const user = Player("user");
-    const robot = Player("robot");
-
-    user.switchTurn();
-    robot.game.placeRobotShips();
-    user.game.placeShip(playerShips[0], 1, 1, "vertical", user.game.board);
-    user.game.placeShip(playerShips[1], 3, 5, "horizontal", user.game.board);
-    user.game.placeShip(playerShips[2], 2, 4, "vertical", user.game.board);
-    user.game.placeShip(playerShips[3], 9, 3, "vertical", user.game.board);
-    user.game.placeShip(playerShips[4], 10, 3, "vertical", user.game.board);
-
-    displayGameBoards(user.game.board, "#user-board");
-}
-
-function displayGameBoards(boardObj, boardSelector) {
+function displayGameBoards(boardObj, boardSelector, secondClass) {
     const boardDisplay = document.querySelector(boardSelector);
-    console.log(boardObj);
     for (let i = 1; i < boardObj.length; i += 1) {
         const divOne = document.createElement("div");
         divOne.classList.add("column");
@@ -52,12 +38,53 @@ function displayGameBoards(boardObj, boardSelector) {
         for (let j = 1; j < boardObj[i].length; j += 1) {
             const divTwo = document.createElement("div");
             divTwo.classList.add("row");
+            divTwo.classList.add(secondClass);
             divOne.appendChild(divTwo);
-            divTwo.textContent = [j, i];
+            divTwo.dataset.cordOne = j;
+            divTwo.dataset.cordTwo = i;
+            // if (boardObj[j][i] != null) {
+            //     divTwo.classList.add("hit-ship");
+            // } else {
+            //     divTwo.classList.add("empty");
+            // }
         }
     }
 }
 
-function addEventListeners() {}
+const user = Player("user");
+const robot = Player("robot");
 
-export { generateStarterHTML, addEventListeners, gameLoop };
+function gameLoop() {
+    user.switchTurn();
+
+    robot.game.placeRobotShips();
+    user.game.placeShip(playerShips[0], 1, 1, "vertical", user.game.board);
+    user.game.placeShip(playerShips[1], 3, 5, "horizontal", user.game.board);
+    user.game.placeShip(playerShips[2], 2, 4, "vertical", user.game.board);
+    user.game.placeShip(playerShips[3], 9, 3, "vertical", user.game.board);
+    user.game.placeShip(playerShips[4], 10, 3, "vertical", user.game.board);
+    robot.game.placeShip(playerShips[0], 1, 1, "vertical", robot.game.board);
+
+    displayGameBoards(user.game.board, "#user-board");
+    displayGameBoards(robot.game.board, "#bot-board", "bot");
+
+    const botBoard = document.querySelectorAll(".bot");
+    botBoard.forEach((cell) => {
+        cell.addEventListener("click", () => {
+            gameSequence(cell);
+        });
+    });
+}
+
+function gameSequence(cell) {
+    if (user.takeTurn(robot, cell.dataset.cordOne, cell.dataset.cordTwo)) {
+        cell.classList.add("hit-ship");
+    } else {
+        cell.classList.add("miss");
+    }
+    // user.switchTurn();
+    // robot.switchTurn();
+    // robot.aiMoves(user);
+}
+
+export { generateStarterHTML, gameLoop };

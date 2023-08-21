@@ -131,13 +131,14 @@ export default function Gameboard() {
     function recieveAttack(cordOne, cordTwo) {
         this.allCords.push([cordOne, cordTwo]);
         const ship = checkCordForAttack(cordOne, cordTwo, this.board);
-        if (!ship) {
+        if (ship === null) {
             this.misses += 1;
             this.missedCords.push([cordOne, cordTwo]);
-            return "miss";
+            this.board[cordOne][cordTwo] = "miss";
+        } else {
+            updateHits(ship, this.board);
+            return true;
         }
-        updateHits(ship, this.board);
-        return ship;
     }
 
     const isSunkShip = (ship) => ship.sunk;

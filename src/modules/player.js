@@ -9,15 +9,14 @@ export default function Player(playerName) {
         if (this.turn === false) {
             return false;
         }
-        opponent.game.recieveAttack(cordOne, cordTwo);
-        return true;
+        return opponent.game.recieveAttack(cordOne, cordTwo);
     }
 
     function switchTurn() {
-        if(this.turn === false) {
-            this.turn = true
+        if (this.turn === false) {
+            this.turn = true;
         } else {
-            this.turn = false
+            this.turn = false;
         }
         return this.turn;
     }
@@ -33,12 +32,11 @@ export default function Player(playerName) {
     function availableMoves(opponent) {
         let cords = [randomNumber(), randomNumber()];
         let previousMoves = opponent.game.allCords;
-
         if (!previousMoves.length) {
             return cords;
         }
 
-        for (let i = 0; i <= previousMoves.length; i += 1) {
+        for (let i = 0; i < previousMoves.length; i += 1) {
             if (
                 cords[0] === previousMoves[i][0] &&
                 cords[1] === previousMoves[i][1]
