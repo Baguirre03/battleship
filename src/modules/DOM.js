@@ -31,6 +31,12 @@ const playerShips = [
     Ship(5, "five"),
 ];
 
+const user = Player("user");
+const robot = Player("robot");
+let currentShip = playerShips[0]
+let currentDirection = "vertical"
+let placedShips = false
+
 function displayGameBoards(boardObj, boardSelector, secondClass) {
     const boardDisplay = document.querySelector(boardSelector);
     for (let i = 1; i < boardObj.length; i += 1) {
@@ -73,39 +79,36 @@ function checkWinner(robot, user) {
 }
 
 
-function gameSequence(cell, robot, user, gameOver) {
+function gameSequence(cell, gameOver) {
     if (gameOver || robot.game.checkIfAlreadyClicked(cell.dataset.cordOne, cell.dataset.cordTwo)) {
         return;
     } 
     if (user.takeTurn(robot, cell.dataset.cordOne, cell.dataset.cordTwo)) {
         cell.classList.add("hit-ship");
     } else {
+        user.switchTurn()
         robot.aiMoves(user);
         cell.classList.add("miss");
     }
 }
 
 function gameLoop() {
-    const user = Player("user");
-    const robot = Player("robot");
     let gameOver = false;
-    let placedShips = false
+
     user.switchTurn()
-
     robot.game.placeRobotShips();
-    user.game.placeShip(playerShips[0], 1, 1, "vertical", user.game.board);
-    user.game.placeShip(playerShips[1], 3, 5, "horizontal", user.game.board);
-    user.game.placeShip(playerShips[2], 2, 4, "vertical", user.game.board);
-    user.game.placeShip(playerShips[3], 9, 3, "vertical", user.game.board);
-    user.game.placeShip(playerShips[4], 10, 3, "vertical", user.game.board);
 
-    displayGameBoards(user.game.board, "#user-board");
+    displayGameBoards(user.game.board, "#user-board", "user");
     displayGameBoards(robot.game.board, "#bot-board", "bot");
 
     const botBoard = document.querySelectorAll(".bot");
     botBoard.forEach((cell) => {
         cell.addEventListener("click", () => {
-            gameSequence(cell, robot, user, gameOver);
+            if(user.turn === false) {
+                console.log('user cannot go rn')
+                return
+            }
+            gameSequence(cell, gameOver);
             if (checkWinner(robot, user)) {
                 gameOver = true;
             }
@@ -113,4 +116,33 @@ function gameLoop() {
     });
 }
 
-export { generateStarterHTML, gameLoop };
+function advanceShipArray() {
+    const index = playerShips.indexOf(currentShip)
+    currentShip = playerShips[index + 1]
+}
+
+function placeShips() {
+    const cells = document.querySelectorAll('.row.user')
+    cells.forEach((cell) => {
+        cell.addEventListener('mouseenter', () => {
+            cell.classList.add('hovered')
+        })
+        cell.addEventListener('mouseleave', () => {
+            cell.classList.remove('hovered')
+        })
+        cell.addEventListener('click', () => {
+            if(placedShips) return
+
+            user.game.placeShip(currentShip, cell.dataset.cordOne, cell.dataset.cordTwo, currentDirection, user.game.board)
+            if(currentShip === playerShips[4]) {
+                placedShips = true
+            }
+
+            advanceShipArray()
+        })
+    })
+}
+
+
+
+export { generateStarterHTML, gameLoop, placeShips };

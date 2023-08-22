@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import Gameboard from "./gameboard";
 
 /* eslint-disable prefer-const */
@@ -15,7 +16,6 @@ export default function Player(playerName) {
 
     function switchTurn() {
         this.turn ? this.turn = false : this.turn = true  
-
         return this.turn;
     }
 
@@ -46,17 +46,20 @@ export default function Player(playerName) {
     }
 
     function aiMoves(opponent) {
-        let cords = availableMoves(opponent);
-        const cell = document.querySelector(
-            `[data-cord-one="${cords[0]}"][data-cord-two="${cords[1]}"]`,
-        );
-        if (opponent.game.recieveAttack(cords[0], cords[1]) === true) {
-            cell.classList.add("hit-ship");
-            aiMoves(opponent)
-            return true;
-        }
-        cell.classList.add("miss");
-        return false;
+        setTimeout(() => {
+            let cords = availableMoves(opponent);
+            const cell = document.querySelector(
+                `[data-cord-one="${cords[0]}"][data-cord-two="${cords[1]}"]`,
+            );
+            if (opponent.game.recieveAttack(cords[0], cords[1]) === true) {
+                cell.classList.add("hit-ship");
+                aiMoves(opponent)
+                return true;
+            }
+            opponent.switchTurn()
+            cell.classList.add("miss");
+            return false;
+        }, 1000)
     }
 
     return {

@@ -55,13 +55,13 @@ export default function Gameboard() {
         if (direction === "horizontal") {
             newCords.push(cordOne);
             for (let i = 1; i < shipObj.getLength(); i += 1) {
-                newCords.push(cordOne + i);
+                newCords.push(Number(cordOne) + i);
             }
         }
         if (direction === "vertical") {
             newCords.push(cordTwo);
             for (let i = 1; i < shipObj.getLength(); i += 1) {
-                newCords.push(cordTwo + i);
+                newCords.push(Number(cordTwo) + i);
             }
         }
         return newCords;
@@ -165,10 +165,10 @@ export default function Gameboard() {
 
     function placeRobotShips() {
         const ships = [
-            // Ship(1, "one"),
-            // Ship(2, "two"),
-            // Ship(3, "three"),
-            // Ship(4, "four"),
+            Ship(1, "one"),
+            Ship(2, "two"),
+            Ship(3, "three"),
+            Ship(4, "four"),
             Ship(5, "five"),
         ];
 
