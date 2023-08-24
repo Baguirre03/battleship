@@ -22,7 +22,7 @@
 }
 
 .hit-ship {
-    background-color: red;
+    background-color: red !important;
 }
 
 .miss {
@@ -35,4 +35,8 @@
 
 .hovered {
     background-color: orange;
+}
+
+.ship-placed-there {
+    background-color: aqua;
 }

@@ -111,6 +111,7 @@ export default function Gameboard() {
             }
         });
         shipsArray.push(shipObj);
+        return true
     }
 
     function checkCordForAttack(cordOne, cordTwo, boardCopy) {
@@ -215,6 +216,7 @@ export default function Gameboard() {
         allCords,
         randomDirection,
         randomNumber,
+        findCords,
         checkIfAlreadyClicked,
     };
 }

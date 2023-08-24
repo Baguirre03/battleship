@@ -13,10 +13,12 @@ function generateStarterHTML() {
             <div class="section-holder">
                 <div class="player-name"></div>
                 <div class="board" id="user-board"></div>
+                <div class="ships-display user"></div>
             </div>
             <div class="section-holder">
                 <div class="player-name"></div>
                 <div class="board" id="bot-board"></div>
+                <div class="ships-display robot"></div>
             </div>
         </div>
     </body>
@@ -64,7 +66,36 @@ function displayWinner(winner) {
     }
 }
 
-function checkWinner(robot, user) {
+function updateShips(playerOrUser) {
+    const ships = playerOrUser.game.shipsArray
+    const display = document.querySelector(`.ships-display.${playerOrUser.playerName}`)
+    while(display.firstChild) {
+        display.removeChild(display.firstChild)
+    }
+    ships.forEach((ship) => {
+        const div = document.createElement('div') 
+        div.classList.add('ship-container')
+        display.appendChild(div)
+
+        const name = document.createElement('div')
+        name.classList.add('ship-name')
+        const hits = document.createElement('div')
+        hits.classList.add('hits')
+        const sunk = document.createElement('div')
+        sunk.classList.add('sunk')
+
+        div.appendChild(name)
+        div.appendChild(hits)
+        div.appendChild(sunk)
+
+        name.textContent = ship.name
+        hits.textContent = ship.hits
+        sunk.textContent = ship.isSunk()
+
+    })
+}
+
+function checkWinner() {
     if (robot.game.allShipsSunk()) {
         user.winner = true;
         displayWinner(user);
@@ -85,11 +116,14 @@ function gameSequence(cell, gameOver) {
     } 
     if (user.takeTurn(robot, cell.dataset.cordOne, cell.dataset.cordTwo)) {
         cell.classList.add("hit-ship");
+        cell.classList.remove('ship-placed-there')
     } else {
         user.switchTurn()
         robot.aiMoves(user);
         cell.classList.add("miss");
     }
+    updateShips(user)
+    updateShips(robot)
 }
 
 function gameLoop() {
@@ -104,8 +138,10 @@ function gameLoop() {
     const botBoard = document.querySelectorAll(".bot");
     botBoard.forEach((cell) => {
         cell.addEventListener("click", () => {
+            if(!placedShips) {
+                return
+            }
             if(user.turn === false) {
-                console.log('user cannot go rn')
                 return
             }
             gameSequence(cell, gameOver);
@@ -121,23 +157,50 @@ function advanceShipArray() {
     currentShip = playerShips[index + 1]
 }
 
+function addClassesForChoosingShips(cell, classToAdd, addOrRemove) {
+    const cords = user.game.findCords(currentShip, cell.dataset.cordOne, cell.dataset.cordTwo, currentDirection)
+    cords.forEach((addCord) => {
+        if (currentDirection === "horizontal") {
+            const hightlight = document.querySelector(`[data-cord-one="${addCord}"][data-cord-two="${cell.dataset.cordTwo}"]`)
+            hightlight.classList[addOrRemove](classToAdd)
+        }
+        if (currentDirection === "vertical") {
+            const hightlight = document.querySelector(`[data-cord-one="${cell.dataset.cordOne}"][data-cord-two="${addCord}"]`)
+            hightlight.classList[addOrRemove](classToAdd)
+        }
+    });    
+}
+
 function placeShips() {
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault()
+        
+        const deselect = document.querySelectorAll('.row.user')
+        deselect.forEach((cell) => cell.classList.remove('hovered'))
+        currentDirection === "vertical" ? currentDirection = "horizontal" : currentDirection = "vertical"
+        addClassesForChoosingShips(e.target, 'hovered', 'add')
+        
+    })
+
     const cells = document.querySelectorAll('.row.user')
     cells.forEach((cell) => {
         cell.addEventListener('mouseenter', () => {
-            cell.classList.add('hovered')
-        })
-        cell.addEventListener('mouseleave', () => {
-            cell.classList.remove('hovered')
-        })
-        cell.addEventListener('click', () => {
             if(placedShips) return
+            addClassesForChoosingShips(cell, 'hovered', 'add')
+        })
 
-            user.game.placeShip(currentShip, cell.dataset.cordOne, cell.dataset.cordTwo, currentDirection, user.game.board)
+        cell.addEventListener('mouseleave', () => {
+            if(placedShips) return
+            addClassesForChoosingShips(cell, 'hovered', 'remove')
+        })
+
+        cell.addEventListener('click', () => {
+            if(placedShips) return           
+            if(!user.game.placeShip(currentShip, cell.dataset.cordOne, cell.dataset.cordTwo, currentDirection, user.game.board)) return
             if(currentShip === playerShips[4]) {
                 placedShips = true
             }
-
+            addClassesForChoosingShips(cell, 'ship-placed-there', 'add')
             advanceShipArray()
         })
     })
