@@ -35,9 +35,9 @@ const playerShips = [
 
 const user = Player("user");
 const robot = Player("robot");
-let currentShip = playerShips[0]
-let currentDirection = "vertical"
-let placedShips = false
+let currentShip = playerShips[0];
+let currentDirection = "vertical";
+let placedShips = false;
 
 function displayGameBoards(boardObj, boardSelector, secondClass) {
     const boardDisplay = document.querySelector(boardSelector);
@@ -49,7 +49,7 @@ function displayGameBoards(boardObj, boardSelector, secondClass) {
             const divTwo = document.createElement("div");
             divTwo.classList.add("row");
             divTwo.classList.add(secondClass);
-            
+
             divOne.appendChild(divTwo);
             divTwo.dataset.cordOne = j;
             divTwo.dataset.cordTwo = i;
@@ -66,34 +66,56 @@ function displayWinner(winner) {
     }
 }
 
-function updateShips(playerOrUser) {
-    const ships = playerOrUser.game.shipsArray
-    const display = document.querySelector(`.ships-display.${playerOrUser.playerName}`)
-    while(display.firstChild) {
-        display.removeChild(display.firstChild)
+function removeChildren(removeFrom) {
+    while (removeFrom.firstChild) {
+        removeFrom.removeChild(removeFrom.firstChild);
     }
+}
+
+function sunkShip(player, ship) {
+    if (player.game.sunkShipsArray.includes(ship)) return;
+    player.game.sunkShipsArray.push(ship);
+
+    const notif = document.createElement("div");
+    notif.classList.add("notification");
+    notif.textContent = `${ship.name} has been sunk!`;
+    document.body.appendChild(notif);
+    setTimeout(() => {
+        document.body.removeChild(notif);
+    }, 3000);
+}
+
+function updateShips(playerOrUser) {
+    const ships = playerOrUser.game.shipsArray;
+    const display = document.querySelector(
+        `.ships-display.${playerOrUser.playerName}`,
+    );
+    removeChildren(display);
     ships.forEach((ship) => {
-        const div = document.createElement('div') 
-        div.classList.add('ship-container')
-        display.appendChild(div)
+        const div = document.createElement("div");
+        div.classList.add("ship-container");
+        display.appendChild(div);
 
-        const name = document.createElement('h3')
-        name.classList.add('ship-name')
-        const hits = document.createElement('div')
-        hits.classList.add('hits')
-        const sunk = document.createElement('div')
-        sunk.classList.add('sunk')
-        const length = document.createElement('div')
-        length.classList.add('length')
+        const name = document.createElement("h3");
+        name.classList.add("ship-name");
+        const hits = document.createElement("div");
+        hits.classList.add("hits");
+        const sunk = document.createElement("div");
+        sunk.classList.add("sunk");
+        const length = document.createElement("div");
+        length.classList.add("length");
 
-        div.append(name, hits, sunk, length)
+        div.append(name, hits, sunk, length);
 
-        name.textContent = ship.name
-        hits.textContent = ship.hits
-        sunk.textContent = ship.isSunk()
-        length.textContent = ship.getLength()
-
-    })
+        name.textContent = ship.name;
+        hits.textContent = `Hits: ${ship.hits}`;
+        sunk.textContent = `Sunk: ${ship.isSunk()}`;
+        if (ship.isSunk()) {
+            sunkShip(playerOrUser, ship);
+            name.classList.add("sunk-ship-name");
+        }
+        length.textContent = `Length: ${ship.getLength()}`;
+    });
 }
 
 function checkWinner() {
@@ -110,28 +132,32 @@ function checkWinner() {
     return false;
 }
 
-
 function gameSequence(cell, gameOver) {
-    if (gameOver || robot.game.checkIfAlreadyClicked(cell.dataset.cordOne, cell.dataset.cordTwo)) {
+    if (
+        gameOver ||
+        robot.game.checkIfAlreadyClicked(
+            cell.dataset.cordOne,
+            cell.dataset.cordTwo,
+        )
+    ) {
         return;
-    } 
+    }
     if (user.takeTurn(robot, cell.dataset.cordOne, cell.dataset.cordTwo)) {
         cell.classList.add("hit-ship");
-        cell.classList.remove('ship-placed-there')
     } else {
-        user.switchTurn()
+        user.switchTurn();
         robot.aiMoves(user);
         cell.classList.add("miss");
     }
 
-    updateShips(user)
-    updateShips(robot)
+    updateShips(user);
+    updateShips(robot);
 }
 
 function gameLoop() {
     let gameOver = false;
 
-    user.switchTurn()
+    user.switchTurn();
     robot.game.placeRobotShips();
 
     displayGameBoards(user.game.board, "#user-board", "user");
@@ -140,11 +166,11 @@ function gameLoop() {
     const botBoard = document.querySelectorAll(".bot");
     botBoard.forEach((cell) => {
         cell.addEventListener("click", () => {
-            if(!placedShips) {
-                return
+            if (!placedShips) {
+                return;
             }
-            if(user.turn === false) {
-                return
+            if (user.turn === false) {
+                return;
             }
             gameSequence(cell, gameOver);
             if (checkWinner(robot, user)) {
@@ -155,60 +181,83 @@ function gameLoop() {
 }
 
 function advanceShipArray() {
-    const index = playerShips.indexOf(currentShip)
-    currentShip = playerShips[index + 1]
+    const index = playerShips.indexOf(currentShip);
+    currentShip = playerShips[index + 1];
 }
 
-function addClassesForChoosingShips(cell, classToAdd, addOrRemove) {
-    const cords = user.game.findCords(currentShip, cell.dataset.cordOne, cell.dataset.cordTwo, currentDirection)
+function addClasses(cell, classToAdd, addOrRemove) {
+    const cords = user.game.findCords(
+        currentShip,
+        cell.dataset.cordOne,
+        cell.dataset.cordTwo,
+        currentDirection,
+    );
     cords.forEach((addCord) => {
         if (currentDirection === "horizontal") {
-            const hightlight = document.querySelector(`[data-cord-one="${addCord}"][data-cord-two="${cell.dataset.cordTwo}"]`)
-            hightlight.classList[addOrRemove](classToAdd)
+            const hightlight = document.querySelector(
+                `[data-cord-one="${addCord}"][data-cord-two="${cell.dataset.cordTwo}"]`,
+            );
+            hightlight.classList[addOrRemove](classToAdd);
         }
         if (currentDirection === "vertical") {
-            const hightlight = document.querySelector(`[data-cord-one="${cell.dataset.cordOne}"][data-cord-two="${addCord}"]`)
-            hightlight.classList[addOrRemove](classToAdd)
+            const hightlight = document.querySelector(
+                `[data-cord-one="${cell.dataset.cordOne}"][data-cord-two="${addCord}"]`,
+            );
+            hightlight.classList[addOrRemove](classToAdd);
         }
-    });    
+    });
 }
 
 function cellEventListers(cell) {
-    cell.addEventListener('mouseenter', () => {
-        if(placedShips) return
-        addClassesForChoosingShips(cell, 'hovered', 'add')
-    })
+    cell.addEventListener("mouseenter", () => {
+        if (placedShips) return;
+        addClasses(cell, "hovered", "add");
+    });
 
-    cell.addEventListener('mouseleave', () => {
-        if(placedShips) return
-        addClassesForChoosingShips(cell, 'hovered', 'remove')
-    })
+    cell.addEventListener("mouseleave", () => {
+        if (placedShips) return;
+        addClasses(cell, "hovered", "remove");
+    });
 
-    cell.addEventListener('click', () => {
-        if(placedShips) return           
-        if(!user.game.placeShip(currentShip, cell.dataset.cordOne, cell.dataset.cordTwo, currentDirection, user.game.board)) return
-        if(currentShip === playerShips[4]) {
-            placedShips = true
+    cell.addEventListener("click", () => {
+        const deselect = document.querySelectorAll(".row.user");
+        deselect.forEach((deselectThis) =>
+            deselectThis.classList.remove("hovered"),
+        ); //   removes hovered class from last placed ship
+
+        if (placedShips) return;
+        if (
+            !user.game.placeShip(
+                currentShip,
+                cell.dataset.cordOne,
+                cell.dataset.cordTwo,
+                currentDirection,
+                user.game.board,
+            )
+        )
+            return;
+        if (currentShip === playerShips[4]) {
+            placedShips = true;
         }
-        addClassesForChoosingShips(cell, 'ship-placed-there', 'add')
-        advanceShipArray()
-    })
+        addClasses(cell, "ship-placed-there", "add");
+        advanceShipArray();
+    });
 }
 
 function placeShips() {
-    document.addEventListener('contextmenu', (e) => {
-        e.preventDefault()
-        const deselect = document.querySelectorAll('.row.user')
-        deselect.forEach((cell) => cell.classList.remove('hovered'))
-        
-        currentDirection === "vertical" ? currentDirection = "horizontal" : currentDirection = "vertical"
-        addClassesForChoosingShips(e.target, 'hovered', 'add')
-    })
+    document.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        const deselect = document.querySelectorAll(".row.user");
+        deselect.forEach((cell) => cell.classList.remove("hovered"));
 
-    const cells = document.querySelectorAll('.row.user')
-    cells.forEach(cell => cellEventListers(cell))
+        currentDirection === "vertical"
+            ? (currentDirection = "horizontal")
+            : (currentDirection = "vertical");
+        addClasses(e.target, "hovered", "add");
+    });
+
+    const cells = document.querySelectorAll(".row.user");
+    cells.forEach((cell) => cellEventListers(cell));
 }
-
-
 
 export { generateStarterHTML, gameLoop, placeShips };

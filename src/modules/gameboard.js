@@ -13,6 +13,7 @@ export default function Gameboard() {
     let missedCords = [];
     let allCords = [];
     let shipsArray = [];
+    let sunkShipsArray = [];
     let sunkShips = 0;
 
     function iniatlizeBoard() {
@@ -111,7 +112,7 @@ export default function Gameboard() {
             }
         });
         shipsArray.push(shipObj);
-        return true
+        return true;
     }
 
     function checkCordForAttack(cordOne, cordTwo, boardCopy) {
@@ -218,5 +219,6 @@ export default function Gameboard() {
         randomNumber,
         findCords,
         checkIfAlreadyClicked,
+        sunkShipsArray,
     };
 }
