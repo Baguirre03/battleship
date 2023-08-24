@@ -77,20 +77,21 @@ function updateShips(playerOrUser) {
         div.classList.add('ship-container')
         display.appendChild(div)
 
-        const name = document.createElement('div')
+        const name = document.createElement('h3')
         name.classList.add('ship-name')
         const hits = document.createElement('div')
         hits.classList.add('hits')
         const sunk = document.createElement('div')
         sunk.classList.add('sunk')
+        const length = document.createElement('div')
+        length.classList.add('length')
 
-        div.appendChild(name)
-        div.appendChild(hits)
-        div.appendChild(sunk)
+        div.append(name, hits, sunk, length)
 
         name.textContent = ship.name
         hits.textContent = ship.hits
         sunk.textContent = ship.isSunk()
+        length.textContent = ship.getLength()
 
     })
 }
@@ -122,6 +123,7 @@ function gameSequence(cell, gameOver) {
         robot.aiMoves(user);
         cell.classList.add("miss");
     }
+
     updateShips(user)
     updateShips(robot)
 }
@@ -171,39 +173,40 @@ function addClassesForChoosingShips(cell, classToAdd, addOrRemove) {
     });    
 }
 
+function cellEventListers(cell) {
+    cell.addEventListener('mouseenter', () => {
+        if(placedShips) return
+        addClassesForChoosingShips(cell, 'hovered', 'add')
+    })
+
+    cell.addEventListener('mouseleave', () => {
+        if(placedShips) return
+        addClassesForChoosingShips(cell, 'hovered', 'remove')
+    })
+
+    cell.addEventListener('click', () => {
+        if(placedShips) return           
+        if(!user.game.placeShip(currentShip, cell.dataset.cordOne, cell.dataset.cordTwo, currentDirection, user.game.board)) return
+        if(currentShip === playerShips[4]) {
+            placedShips = true
+        }
+        addClassesForChoosingShips(cell, 'ship-placed-there', 'add')
+        advanceShipArray()
+    })
+}
+
 function placeShips() {
     document.addEventListener('contextmenu', (e) => {
         e.preventDefault()
-        
         const deselect = document.querySelectorAll('.row.user')
         deselect.forEach((cell) => cell.classList.remove('hovered'))
+        
         currentDirection === "vertical" ? currentDirection = "horizontal" : currentDirection = "vertical"
         addClassesForChoosingShips(e.target, 'hovered', 'add')
-        
     })
 
     const cells = document.querySelectorAll('.row.user')
-    cells.forEach((cell) => {
-        cell.addEventListener('mouseenter', () => {
-            if(placedShips) return
-            addClassesForChoosingShips(cell, 'hovered', 'add')
-        })
-
-        cell.addEventListener('mouseleave', () => {
-            if(placedShips) return
-            addClassesForChoosingShips(cell, 'hovered', 'remove')
-        })
-
-        cell.addEventListener('click', () => {
-            if(placedShips) return           
-            if(!user.game.placeShip(currentShip, cell.dataset.cordOne, cell.dataset.cordTwo, currentDirection, user.game.board)) return
-            if(currentShip === playerShips[4]) {
-                placedShips = true
-            }
-            addClassesForChoosingShips(cell, 'ship-placed-there', 'add')
-            advanceShipArray()
-        })
-    })
+    cells.forEach(cell => cellEventListers(cell))
 }
 
 
