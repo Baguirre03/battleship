@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-param-reassign */
+// eslint-disable-next-line import/no-cycle
 import Player from "./player";
 import Ship from "./ship";
 
@@ -69,11 +70,17 @@ function sunkShip(player, ship) {
 
     const notif = document.createElement("div");
     notif.classList.add("notification");
-    notif.textContent = `${ship.name} has been sunk!`;
+
+    notif.textContent = `${player.playerName
+        .slice(0, 1)
+        .toUpperCase()}${player.playerName.slice(1)}'s ${
+        ship.name
+    } has been sunk!`;
+
     document.body.appendChild(notif);
     setTimeout(() => {
         document.body.removeChild(notif);
-    }, 3000);
+    }, 2500);
 }
 
 function updateShips(playerOrUser) {

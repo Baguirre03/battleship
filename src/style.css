@@ -76,7 +76,7 @@ body {
     padding: 1rem;
     border-radius: 1rem;
     position: absolute;
-    animation: blinker 2s linear infinite;
+    animation: blinker 3s linear infinite;
 }
 
 @keyframes blinker {

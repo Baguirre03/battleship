@@ -93,6 +93,7 @@ export default function Player(playerName) {
                 hit = true;
                 cell.classList.add("hit-ship");
                 cell.classList.remove("ship-placed-there");
+                // eslint-disable-next-line no-use-before-define
                 aiMoves(opponent);
                 return true;
             }
