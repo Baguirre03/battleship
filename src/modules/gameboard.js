@@ -11,9 +11,11 @@ export default function Gameboard() {
     const board = iniatlizeBoard();
     let misses = 0;
     let missedCords = [];
+    let hitCords = [];
     let allCords = [];
     let shipsArray = [];
     let sunkShipsArray = [];
+    let lastShipHit = null;
     let sunkShips = 0;
 
     function iniatlizeBoard() {
@@ -118,7 +120,7 @@ export default function Gameboard() {
     function checkCordForAttack(cordOne, cordTwo, boardCopy) {
         const cordinate = boardCopy[cordOne][cordTwo];
         if (cordinate != null) {
-            return board[cordOne][cordTwo]; // returns ship if there
+            return boardCopy[cordOne][cordTwo]; // returns ship if there
         }
         return null;
     }
@@ -137,10 +139,12 @@ export default function Gameboard() {
             this.misses += 1;
             this.missedCords.push([cordOne, cordTwo]);
             this.board[cordOne][cordTwo] = "miss";
-        } else {
-            updateHits(ship, this.board);
-            return true;
+            return false;
         }
+        this.lastShipHit = this.board[cordOne][cordTwo];
+        this.hitCords.push([cordOne, cordTwo]);
+        updateHits(ship, this.board);
+        return true;
     }
 
     const isSunkShip = (ship) => ship.sunk;
@@ -220,5 +224,7 @@ export default function Gameboard() {
         findCords,
         checkIfAlreadyClicked,
         sunkShipsArray,
+        hitCords,
+        lastShipHit,
     };
 }

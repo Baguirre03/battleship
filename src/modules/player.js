@@ -6,6 +6,7 @@ export default function Player(playerName) {
     let turn = false;
     let game = Gameboard();
     let winner = false;
+    let hit = false;
 
     function takeTurn(opponent, cordOne, cordTwo) {
         if (this.turn === false) {
@@ -45,22 +46,77 @@ export default function Player(playerName) {
         return cords;
     }
 
-    function aiMoves(opponent) {
+    function smartMove(opponent, cords) {
+        let options = [
+            [cords[0] + 1, cords[1]], //  X
+            [cords[0] - 1, cords[1]], // X
+            [cords[0], cords[1] - 1], // Y
+            [cords[0], cords[1] + 1], // Y
+        ];
+
+        options = options.filter(
+            (option) =>
+                option[0] >= 1 &&
+                option[0] <= 10 &&
+                option[1] >= 1 &&
+                option[1] <= 10,
+        );
+
+        let choice = options[Math.floor(Math.random() * options.length)];
+        for (let i = 0; i < opponent.game.allCords.length; i += 1) {
+            if (
+                opponent.game.allCords[i][0] === choice[0] &&
+                opponent.game.allCords[i][1] === choice[1]
+            ) {
+                // opponent.game.hitCords.splice(opponent.game.hitCords.length);
+                return smartMove(
+                    opponent,
+                    opponent.game.hitCords[opponent.game.hitCords.length - 1],
+                );
+            }
+        }
+        return choice;
+    }
+
+    function attackSequence(opponent, cords) {
         setTimeout(() => {
-            let cords = availableMoves(opponent);
             const cell = document.querySelector(
                 `[data-cord-one="${cords[0]}"][data-cord-two="${cords[1]}"]`,
             );
+
             if (opponent.game.recieveAttack(cords[0], cords[1]) === true) {
+                hit = true;
                 cell.classList.add("hit-ship");
                 cell.classList.remove("ship-placed-there");
                 aiMoves(opponent);
                 return true;
             }
+
+            if (
+                opponent.game.lastShipHit !== null &&
+                opponent.game.lastShipHit.isSunk()
+            ) {
+                hit = false;
+            }
+
             opponent.switchTurn();
             cell.classList.add("miss");
             return false;
         }, 400);
+    }
+
+    function aiMoves(opponent) {
+        if (hit === true) {
+            let cords = smartMove(
+                opponent,
+                opponent.game.hitCords[opponent.game.hitCords.length - 1],
+                0,
+            );
+            attackSequence(opponent, cords);
+        } else {
+            let cords = availableMoves(opponent);
+            attackSequence(opponent, cords);
+        }
     }
 
     return {

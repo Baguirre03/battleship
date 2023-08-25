@@ -57,15 +57,6 @@ function displayGameBoards(boardObj, boardSelector, secondClass) {
     }
 }
 
-function displayWinner(winner) {
-    if (!document.querySelector(".winner-display")) {
-        const display = document.createElement("div");
-        display.classList.add("winner-display");
-        document.body.appendChild(display);
-        display.textContent = `${winner.playerName} has one the game!`;
-    }
-}
-
 function removeChildren(removeFrom) {
     while (removeFrom.firstChild) {
         removeFrom.removeChild(removeFrom.firstChild);
@@ -116,6 +107,15 @@ function updateShips(playerOrUser) {
         }
         length.textContent = `Length: ${ship.getLength()}`;
     });
+}
+
+function displayWinner(winner) {
+    if (!document.querySelector(".winner-display")) {
+        const display = document.createElement("div");
+        display.classList.add("winner-display");
+        document.body.appendChild(display);
+        display.textContent = `${winner.playerName} has won the game!`;
+    }
 }
 
 function checkWinner() {
