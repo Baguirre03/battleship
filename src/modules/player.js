@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-expressions */
+import { updateShips } from "./DOM";
 import Gameboard from "./gameboard";
 
 /* eslint-disable prefer-const */
@@ -46,7 +47,7 @@ export default function Player(playerName) {
         return cords;
     }
 
-    function smartMove(opponent, cords) {
+    function smartMove(opponent, cords, counter = 0) {
         let options = [
             [cords[0] + 1, cords[1]], //  X
             [cords[0] - 1, cords[1]], // X
@@ -68,10 +69,13 @@ export default function Player(playerName) {
                 opponent.game.allCords[i][0] === choice[0] &&
                 opponent.game.allCords[i][1] === choice[1]
             ) {
-                // opponent.game.hitCords.splice(opponent.game.hitCords.length);
+                if (counter === 5) {
+                    return availableMoves(opponent);
+                }
                 return smartMove(
                     opponent,
                     opponent.game.hitCords[opponent.game.hitCords.length - 1],
+                    counter + 1,
                 );
             }
         }
@@ -79,6 +83,7 @@ export default function Player(playerName) {
     }
 
     function attackSequence(opponent, cords) {
+        updateShips(opponent);
         setTimeout(() => {
             const cell = document.querySelector(
                 `[data-cord-one="${cords[0]}"][data-cord-two="${cords[1]}"]`,
@@ -102,7 +107,7 @@ export default function Player(playerName) {
             opponent.switchTurn();
             cell.classList.add("miss");
             return false;
-        }, 400);
+        }, 500);
     }
 
     function aiMoves(opponent) {

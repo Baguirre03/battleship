@@ -150,7 +150,6 @@ function gameSequence(cell, gameOver) {
         cell.classList.add("miss");
     }
 
-    updateShips(user);
     updateShips(robot);
 }
 
@@ -260,4 +259,4 @@ function placeShips() {
     cells.forEach((cell) => cellEventListers(cell));
 }
 
-export { generateStarterHTML, gameLoop, placeShips };
+export { generateStarterHTML, gameLoop, placeShips, updateShips };
