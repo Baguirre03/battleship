@@ -4,6 +4,12 @@
     margin: 0;
     padding: 0;
     font-family: "Playfair Display", serif;
+    --dark: #22223b;
+    --ultra-violet: #4a4e69;
+    --rose: #9a8c98;
+    --pale: #c9ada7;
+    --lightest: #f2e9e4;
+    --side-font: 0.9rem;
 }
 
 body {
@@ -11,6 +17,7 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    background-color: var(--lightest);
 }
 
 .title {
@@ -18,6 +25,7 @@ body {
     font-size: 3rem;
     align-self: center;
     justify-self: center;
+    color: var(--dark);
 }
 
 .main-container {
@@ -50,37 +58,126 @@ body {
 }
 
 .winner-display {
+    border: 1px solid black;
+    background-color: var(--dark);
+    box-shadow: 5px 5px 5px var(--rose);
+    border-radius: 1rem;
+    color: var(--lightest);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-size: 3rem;
+    padding: 1rem;
 }
 
 .hovered {
-    background-color: bisque;
+    background-color: var(--rose);
 }
 
 .ship-placed-there {
-    background-color: grey;
+    background-color: var(--dark);
 }
 
 .sunk-ship-name {
     color: red;
 }
 
+.section-holder {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .notification {
+    border: 1px solid var(--pale);
     font-size: 4rem;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 
     color: red;
-    background-color: black;
+    background-color: var(--dark);
     padding: 1rem;
     border-radius: 1rem;
     position: absolute;
     animation: blinker 3s linear infinite;
 }
 
+.ships-display {
+    background-color: var(--ultra-violet);
+    padding: 1rem;
+    border-radius: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.4rem;
+    box-shadow: 5px 5px 5px var(--rose);
+    margin-bottom: 10px;
+    border: 1px solid black;
+}
+
+.ship-name {
+    font-size: var(--side-font);
+}
+.hits {
+    font-size: var(--side-font);
+}
+.sunk {
+    font-size: var(--side-font);
+}
+.length {
+    font-size: var(--side-font);
+}
+.ship-container {
+    background-color: var(--lightest);
+    border-radius: 1rem;
+    padding: 1rem;
+    border: 2px solid black;
+}
+
 @keyframes blinker {
     50% {
         opacity: 0;
     }
+}
+
+.instructions {
+    color: var(--dark);
+    position: absolute;
+    border: 2px solid black;
+    top: 50%;
+    width: 40vw;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--pale);
+    box-shadow: 5px 5px 5px var(--dark);
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+li {
+    list-style: none;
+}
+
+button {
+    font-size: 1rem;
+    border-radius: 1rem;
+    padding: 4px;
+    box-shadow: 4px 4px 4px var(--dark);
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: var(--dark);
+    color: var(--lightest);
 }

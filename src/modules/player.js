@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-expressions */
-import { updateShips } from "./DOM";
+// eslint-disable-next-line import/no-cycle
+import { checkWinner, updateShips } from "./DOM";
 import Gameboard from "./gameboard";
 
 /* eslint-disable prefer-const */
@@ -84,6 +85,7 @@ export default function Player(playerName) {
 
     function attackSequence(opponent, cords) {
         updateShips(opponent);
+        checkWinner();
         setTimeout(() => {
             const cell = document.querySelector(
                 `[data-cord-one="${cords[0]}"][data-cord-two="${cords[1]}"]`,

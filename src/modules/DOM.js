@@ -10,6 +10,24 @@ function generateStarterHTML() {
         <div class="title">BattleShip</div>
     </head>
     <body>
+        <div class="instructions">
+            <h2 class="second-title">Welcome to Battleship!</h2>
+            <h3 class="instructions-header">Instructions:</h3>
+            <ul>
+                <li>Object of the Game: Be the first to sink all 5 of your opponent's ships (the robot)</li>
+                <li>Prepare for Battle: Your board is on the left side, first you want to place all of your ships!</li>
+                <li>If you want to turn the way your ship goes, just right click!</li>
+                <li>After you place all 5 of your ships, battle has begun!</li>
+                <li>Your turn is first, just go ahead and click the board on the right. A blue square means you missed, red means you hit the robot's ship!</li>
+            </ul>
+            <h3 class="notes">Some Notes:</h3>
+            <ul>
+                <li>The robot is better if you place the ships not touching!</li>
+                <li>If you hit a ship, you get to go again!</li>
+                <li>Sometimes the robot is smart, sometimes it isnt...</li>
+            </ul>
+            <button class="play">Lets play!</button>
+        </div> 
         <div class="main-container">
             <div class="section-holder">
                 <div class="player-name"></div>
@@ -80,7 +98,7 @@ function sunkShip(player, ship) {
     document.body.appendChild(notif);
     setTimeout(() => {
         document.body.removeChild(notif);
-    }, 2500);
+    }, 3000);
 }
 
 function updateShips(playerOrUser) {
@@ -121,7 +139,9 @@ function displayWinner(winner) {
         const display = document.createElement("div");
         display.classList.add("winner-display");
         document.body.appendChild(display);
-        display.textContent = `${winner.playerName} has won the game!`;
+        display.textContent = `${winner.playerName
+            .slice(0, 1)
+            .toUpperCase()}${winner.playerName.slice(1)} has won the game!`;
     }
 }
 
@@ -250,6 +270,11 @@ function cellEventListers(cell) {
     });
 }
 
+function removeInstructions() {
+    const instructions = document.querySelector(".instructions");
+    instructions.remove();
+}
+
 function placeShips() {
     document.addEventListener("contextmenu", (e) => {
         e.preventDefault();
@@ -262,8 +287,10 @@ function placeShips() {
         addClasses(e.target, "hovered", "add");
     });
 
+    const removeButton = document.querySelector("button");
+    removeButton.addEventListener("click", removeInstructions);
     const cells = document.querySelectorAll(".row.user");
     cells.forEach((cell) => cellEventListers(cell));
 }
 
-export { generateStarterHTML, gameLoop, placeShips, updateShips };
+export { generateStarterHTML, gameLoop, placeShips, updateShips, checkWinner };
