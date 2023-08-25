@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line import/no-cycle
@@ -142,6 +143,15 @@ function displayWinner(winner) {
         display.textContent = `${winner.playerName
             .slice(0, 1)
             .toUpperCase()}${winner.playerName.slice(1)} has won the game!`;
+
+        const button = document.createElement("button");
+        button.classList.add("restart-game");
+        button.addEventListener("click", () => {
+            location.reload();
+        });
+        button.textContent =
+            "restart game (this just refreshes was too lazy for this sorry)";
+        display.appendChild(button);
     }
 }
 

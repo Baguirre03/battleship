@@ -58,17 +58,20 @@ body {
 }
 
 .winner-display {
-    border: 1px solid black;
-    background-color: var(--dark);
-    box-shadow: 5px 5px 5px var(--rose);
-    border-radius: 1rem;
-    color: var(--lightest);
+    color: var(--dark);
     position: absolute;
+    border: 2px solid black;
     top: 50%;
+    width: 40vw;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 3rem;
+    background-color: var(--pale);
+    box-shadow: 5px 5px 5px var(--dark);
     padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .hovered {
@@ -169,15 +172,27 @@ li {
     list-style: none;
 }
 
-button {
+.play {
     font-size: 1rem;
     border-radius: 1rem;
     padding: 4px;
     box-shadow: 4px 4px 4px var(--dark);
 }
 
-button:hover {
+.play:hover {
     cursor: pointer;
     background-color: var(--dark);
     color: var(--lightest);
+}
+
+.restart-game {
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+    width: 70%;
+    border-radius: 1rem;
+}
+
+.restart-game:hover {
+    cursor: pointer;
 }
