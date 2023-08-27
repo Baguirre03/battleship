@@ -3,6 +3,7 @@
 ### Result
 
 [**Link to Page**](https://baguirre03.github.io/battleship/)
+![Battleship screenshot](./src/screenshot.png?raw=true "Preview")
 
 ### About the project
 
