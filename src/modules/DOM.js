@@ -45,17 +45,17 @@ function generateStarterHTML() {
     `;
 }
 
-const playerShips = [
-    Ship(2, "Destroyer"),
-    Ship(3, "Submarine"),
-    Ship(3, "Cruiser"),
-    Ship(4, "Battleship"),
-    Ship(5, "Carrier"),
-];
+// const playerShips = [
+//     Ship(2, "Destroyer"),
+//     Ship(3, "Submarine"),
+//     Ship(3, "Cruiser"),
+//     Ship(4, "Battleship"),
+//     Ship(5, "Carrier"),
+// ];
 
 const user = Player("user");
 const robot = Player("robot");
-let currentShip = playerShips[0];
+let currentShip = user.game.ships[0];
 let currentDirection = "vertical";
 let placedShips = false;
 
@@ -215,8 +215,8 @@ function gameLoop() {
 }
 
 function advanceShipArray() {
-    const index = playerShips.indexOf(currentShip);
-    currentShip = playerShips[index + 1];
+    const index = user.game.ships.indexOf(currentShip);
+    currentShip = user.game.ships[index + 1];
 }
 
 function addClasses(cell, classToAdd, addOrRemove) {
@@ -270,7 +270,7 @@ function cellEventListers(cell) {
             )
         )
             return;
-        if (currentShip === playerShips[4]) {
+        if (currentShip === user.game.ships[4]) {
             placedShips = true;
         }
         addClasses(cell, "ship-placed-there", "add");

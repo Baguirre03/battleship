@@ -18,10 +18,10 @@ export default function Gameboard() {
     let lastShipHit = null;
     let sunkShips = 0;
     const ships = [
-        // Ship(2, "Destroyer"),
-        // Ship(3, "Submarine"),
-        // Ship(3, "Cruiser"),
-        // Ship(4, "Battleship"),
+        Ship(2, "Destroyer"),
+        Ship(3, "Submarine"),
+        Ship(3, "Cruiser"),
+        Ship(4, "Battleship"),
         Ship(5, "Carrier"),
     ];
 
@@ -225,5 +225,6 @@ export default function Gameboard() {
         sunkShipsArray,
         hitCords,
         lastShipHit,
+        ships,
     };
 }
