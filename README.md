@@ -46,3 +46,4 @@ The goal was to make sure that everything outside of the DOM was working correct
 
 -   Write tests for my "smart robot"
 -   Plan a little more, kind of just jumped into this project when I shouldnt have.
+-   Make a proper reset game button
