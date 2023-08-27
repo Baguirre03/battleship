@@ -3,7 +3,6 @@
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line import/no-cycle
 import Player from "./player";
-import Ship from "./ship";
 
 function generateStarterHTML() {
     document.body.innerHTML = `
@@ -44,14 +43,6 @@ function generateStarterHTML() {
     </body>
     `;
 }
-
-// const playerShips = [
-//     Ship(2, "Destroyer"),
-//     Ship(3, "Submarine"),
-//     Ship(3, "Cruiser"),
-//     Ship(4, "Battleship"),
-//     Ship(5, "Carrier"),
-// ];
 
 const user = Player("user");
 const robot = Player("robot");
