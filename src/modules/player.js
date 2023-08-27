@@ -83,7 +83,7 @@ export default function Player(playerName) {
         return choice;
     }
 
-    function attackSequence(opponent, cords) {
+    function attackSequence(opponent, cords, hitPass) {
         updateShips(opponent);
         checkWinner();
         setTimeout(() => {
@@ -96,7 +96,7 @@ export default function Player(playerName) {
                 cell.classList.add("hit-ship");
                 cell.classList.remove("ship-placed-there");
                 // eslint-disable-next-line no-use-before-define
-                aiMoves(opponent);
+                aiMoves(opponent, hitPass);
                 return true;
             }
 
@@ -135,5 +135,6 @@ export default function Player(playerName) {
         switchTurn,
         aiMoves,
         winner,
+        hit,
     };
 }

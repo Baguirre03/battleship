@@ -4,5 +4,4 @@ import "./style.css";
 generateStarterHTML();
 
 gameLoop();
-
-placeShips()
+placeShips();

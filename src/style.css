@@ -72,6 +72,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    align-items: center;
+    font-size: 1.2rem;
+    justify-content: center;
 }
 
 .hovered {
@@ -188,6 +191,8 @@ li {
 .restart-game {
     background-color: white;
     border: 1px solid black;
+    align-self: center;
+    padding: 4px;
     color: black;
     width: 70%;
     border-radius: 1rem;
@@ -195,4 +200,7 @@ li {
 
 .restart-game:hover {
     cursor: pointer;
+    box-shadow: 4px 4px 4px var(--dark);
+    background-color: var(--dark);
+    color: var(--lightest);
 }

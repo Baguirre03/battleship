@@ -24,5 +24,14 @@ export default function Ship(length, name) {
         return false;
     }
 
-    return { length, name, hits, sunk, hit, getHits, getLength, isSunk };
+    return {
+        length,
+        name,
+        hits,
+        sunk,
+        hit,
+        getHits,
+        getLength,
+        isSunk,
+    };
 }

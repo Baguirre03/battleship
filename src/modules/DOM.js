@@ -149,8 +149,7 @@ function displayWinner(winner) {
         button.addEventListener("click", () => {
             location.reload();
         });
-        button.textContent =
-            "restart game (this just refreshes was too lazy for this sorry)";
+        button.textContent = "restart game";
         display.appendChild(button);
     }
 }
@@ -183,7 +182,7 @@ function gameSequence(cell, gameOver) {
         cell.classList.add("hit-ship");
     } else {
         user.switchTurn();
-        robot.aiMoves(user);
+        robot.aiMoves(user, user.hit);
         cell.classList.add("miss");
     }
 
@@ -195,7 +194,6 @@ function gameLoop() {
 
     user.switchTurn();
     robot.game.placeRobotShips();
-
     displayGameBoards(user.game.board, "#user-board", "user");
     displayGameBoards(robot.game.board, "#bot-board", "bot");
 
@@ -298,7 +296,10 @@ function placeShips() {
     });
 
     const removeButton = document.querySelector("button");
-    removeButton.addEventListener("click", removeInstructions);
+    !removeButton
+        ? null
+        : removeButton.addEventListener("click", removeInstructions);
+
     const cells = document.querySelectorAll(".row.user");
     cells.forEach((cell) => cellEventListers(cell));
 }

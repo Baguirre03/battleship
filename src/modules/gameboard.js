@@ -17,6 +17,13 @@ export default function Gameboard() {
     let sunkShipsArray = [];
     let lastShipHit = null;
     let sunkShips = 0;
+    const ships = [
+        // Ship(2, "Destroyer"),
+        // Ship(3, "Submarine"),
+        // Ship(3, "Cruiser"),
+        // Ship(4, "Battleship"),
+        Ship(5, "Carrier"),
+    ];
 
     function iniatlizeBoard() {
         const holder = [];
@@ -170,14 +177,6 @@ export default function Gameboard() {
     }
 
     function placeRobotShips() {
-        const ships = [
-            Ship(2, "Destroyer"),
-            Ship(3, "Submarine"),
-            Ship(3, "Cruiser"),
-            Ship(4, "Battleship"),
-            Ship(5, "Carrier"),
-        ];
-
         ships.forEach((ship) => {
             placeShipsRobotRec(ship, this.board);
         });
